@@ -1,0 +1,13 @@
+# Ignore Python bytecode
+__pycache__/
+*.py[cod]
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Ignore the models directory
+models/
+
+# Ignore Docker-related files
+*.log
+*.tmp
