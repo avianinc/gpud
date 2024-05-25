@@ -18,6 +18,9 @@ RUN CUDACXX=/usr/local/cuda-12/bin/nvcc CMAKE_ARGS="-DLLAMA_CUBLAS=on -DCMAKE_CU
 
 WORKDIR /workspace
 
+# Copy the GPU test script to the container
+COPY test_gpu.py /workspace/test_gpu.py
+
 # Copy the entrypoint script to the container
 COPY entrypoint.sh /workspace/entrypoint.sh
 RUN chmod +x /workspace/entrypoint.sh

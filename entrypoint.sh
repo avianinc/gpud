@@ -3,6 +3,16 @@
 # Default model path
 MODEL_PATH=${MODEL_PATH:-"/workspace/models/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf"}
 
+# Run the GPU test script
+echo "Running GPU test..."
+python /workspace/test_gpu.py
+
+# Check if the GPU test passed
+if [ $? -ne 0 ]; then
+    echo "GPU test failed. Exiting."
+    exit 1
+fi
+
 # Start the llama server
 echo "Starting llama server on port 5000 with model $MODEL_PATH"
 python -m llama_cpp.server --host 0.0.0.0 --port 5000 --model $MODEL_PATH --n_gpu_layers -1 &
