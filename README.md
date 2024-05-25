@@ -2,6 +2,17 @@
 
 This project sets up a Docker container to run a LLaMA model server and JupyterLab, utilizing multiple GPUs for enhanced performance. The LLaMA model is kept outside the container for easy management and updating.
 
+## Overview
+
+This tool provides a convenient way to deploy a LLaMA model server alongside JupyterLab in a Docker container. The setup allows for interactive data science and machine learning workflows, leveraging the power of multiple GPUs. Models are stored outside the container, making it easy to manage and switch between different models without rebuilding the Docker image.
+
+## Features
+
+- **LLaMA Model Server**: Hosts large language models accessible via HTTP.
+- **JupyterLab**: Provides an interactive environment for data analysis and visualization.
+- **Multi-GPU Support**: Leverages multiple GPUs for enhanced performance.
+- **External Model Management**: Keeps models outside the container for easy updates.
+
 ## Prerequisites
 
 Before starting, ensure you have the following installed on your system:
@@ -9,18 +20,6 @@ Before starting, ensure you have the following installed on your system:
 1. **Docker**: You can install Docker from [here](https://docs.docker.com/get-docker/).
 2. **NVIDIA Container Toolkit**: Follow the installation guide [here](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) to set up GPU support in Docker.
 3. **A directory with your LLaMA models**: Create a directory on your host machine to store your models, for example: `/host/path/to/models`.
-
-## Project Structure
-
-```plaintext
-project-root/
-│
-├── entrypoint.sh
-├── Dockerfile
-├── requirements.txt
-├── .gitignore
-└── README.md
-```
 
 ## Setup Instructions
 
@@ -37,78 +36,40 @@ cd <repository-directory>
 
 Ensure you have your LLaMA model files stored in a directory on your host machine, for example: `/host/path/to/models`.
 
-### Step 3: Create or Verify Files
+### Step 3: Build the Docker Image
 
-Ensure the following files exist in your project directory with the specified content:
-
-#### `requirements.txt`
-
-```plaintext
-jupyterlab
-llama-cpp-python[server]
-numpy
-pandas
-matplotlib
-seaborn
-scikit-learn
-scipy
-tqdm
-ipywidgets
-ipykernel
-jupyterlab-git
-jupyterlab-lsp
-python-language-server[all]
-tensorflow
-torch
-torchvision
-transformers
-datasets
-sentence-transformers
-notebook
-```
-
-#### `entrypoint.sh`
+Build the Docker image using the provided `Dockerfile`. This will install all necessary dependencies and set up the environment:
 
 ```sh
-#!/bin/bash
-
-# Default model path
-MODEL_PATH=${MODEL_PATH:-"/workspace/models/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf"}
-
-# Start the llama server
-echo "Starting llama server on port 5000 with model $MODEL_PATH"
-python -m llama_cpp.server --host 0.0.0.0 --port 5000 --model $MODEL_PATH &
-
-# Start Jupyter Lab
-echo "Starting Jupyter Lab on port 8888"
-jupyter lab --ip 0.0.0.0 --port 8888 --NotebookApp.token='' --NotebookApp.password='' --no-browser --allow-root
-
-# Keep the script running
-wait
+docker build -t llama-cpp-python:latest .
 ```
 
-Make the script executable:
+### Step 4: Run the Docker Container
+
+Run the Docker container, mounting the models directory from your host machine and specifying the model path using an environment variable:
 
 ```sh
-chmod +x entrypoint.sh
+docker run -it --rm -p 8888:8888 -p 5000:5000 --gpus all \
+    -v /host/path/to/models:/workspace/models \
+    -e MODEL_PATH="/workspace/models/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf" \
+    llama-cpp-python:latest
 ```
 
-#### `Dockerfile`
+### Step 5: Access the Services
 
-```dockerfile
-FROM python:3.10-bookworm
+- **JupyterLab**: Open your web browser and navigate to `http://localhost:8888` to access JupyterLab.
+- **LLaMA Model Server**: The model server will be accessible at `http://localhost:5000`.
 
-# Install CUDA Toolkit (Includes drivers and SDK needed for building llama-cpp-python with CUDA support)
-RUN apt-get update && apt-get install -y software-properties-common && \
-    wget https://developer.download.nvidia.com/compute/cuda/12.3.1/local_installers/cuda-repo-debian12-12-3-local_12.3.1-545.23.08-1_amd64.deb && \
-    dpkg -i cuda-repo-debian12-12-3-local_12.3.1-545.23.08-1_amd64.deb && \
-    cp /var/cuda-repo-debian12-12-3-local/cuda-*-keyring.gpg /usr/share/keyrings/ && \
-    add-apt-repository contrib && \
-    apt-get update && \
-    apt-get -y install cuda-toolkit-12-3 
+## Project Structure
 
-# Copy the requirements file to the container
-COPY requirements.txt /workspace/requirements.txt
+- **`entrypoint.sh`**: Script to start the LLaMA model server and JupyterLab.
+- **`Dockerfile`**: Docker configuration file to set up the container environment.
+- **`requirements.txt`**: List of Python packages to install in the container.
+- **`.gitignore`**: Specifies files and directories to ignore in version control.
 
-# Install the required Python packages
-RUN CUDACXX=/usr/local/cuda-12
+## Notes
+
+- Ensure that your Docker configuration allows for sufficient memory and GPU access.
+- You can switch between different models by changing the `MODEL_PATH` environment variable when running the container.
+
+By following these instructions, you can easily set up and run a powerful environment for interactive data science and machine learning workflows using JupyterLab and LLaMA models.
