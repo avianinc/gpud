@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Default model path
-MODEL_PATH=${MODEL_PATH:-"/workspace/models/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf"}
+# MODEL_PATH=${MODEL_PATH:-"/workspace/models/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf"}
 
 # Run the GPU test script
 echo "Running GPU test..."
-python /workspace/test_gpu.py
+python /workspace/scripts/test_gpu.py
 
 # Check if the GPU test passed
 if [ $? -ne 0 ]; then
@@ -14,8 +14,8 @@ if [ $? -ne 0 ]; then
 fi
 
 # Start the llama server
-echo "Starting llama server on port 5000 with model $MODEL_PATH"
-python -m llama_cpp.server --host 0.0.0.0 --port 5000 --model $MODEL_PATH --n_gpu_layers -1 &
+echo "Starting llama server on port 5000"
+python -m llama_cpp.server --host 0.0.0.0 --port 5000 &
 
 # Start Jupyter Lab
 echo "Starting Jupyter Lab on port 8888"

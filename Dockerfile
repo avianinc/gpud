@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y software-properties-common && \
     cp /var/cuda-repo-debian12-12-3-local/cuda-*-keyring.gpg /usr/share/keyrings/ && \
     add-apt-repository contrib && \
     apt-get update && \
-    apt-get -y install cuda-toolkit-12-3 
+    apt-get -y install cuda-toolkit-12-3
 
 # Copy the requirements file to the container
 COPY requirements.txt /workspace/requirements.txt
@@ -18,8 +18,11 @@ RUN CUDACXX=/usr/local/cuda-12/bin/nvcc CMAKE_ARGS="-DLLAMA_CUBLAS=on -DCMAKE_CU
 
 WORKDIR /workspace
 
+# Copy over my notebooks
+COPY notebooks /workspace/notebooks
+
 # Copy the GPU test script to the container
-COPY test_gpu.py /workspace/test_gpu.py
+COPY scripts/test_gpu.py /workspace/scripts/test_gpu.py
 
 # Copy the entrypoint script to the container
 COPY entrypoint.sh /workspace/entrypoint.sh

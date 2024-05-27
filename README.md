@@ -51,7 +51,6 @@ Run the Docker container, mounting the models directory from your host machine a
 ```sh
 docker run -it --rm -p 8888:8888 -p 5000:5000 --gpus all \
     -v /host/path/to/models:/workspace/models \
-    -e MODEL_PATH="/workspace/models/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf" \
     llama-cpp-python:latest
 ```
 
@@ -70,6 +69,6 @@ docker run -it --rm -p 8888:8888 -p 5000:5000 --gpus all \
 ## Notes
 
 - Ensure that your Docker configuration allows for sufficient memory and GPU access.
-- You can switch between different models by changing the `MODEL_PATH` environment variable when running the container.
+- You can switch between different models by changing the `MODEL_PATH` environment variable when running the container when building with a predefined model loaded. (not the best way to do this since it becomes a problem when trying to load a second model.)
 
 By following these instructions, you can easily set up and run a powerful environment for interactive data science and machine learning workflows using JupyterLab and LLaMA models.
