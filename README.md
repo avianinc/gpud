@@ -48,16 +48,27 @@ docker build -t llama-cpp-python:latest .
 
 Run the Docker container, mounting the models directory from your host machine and specifying the model path using an environment variable:
 
+### Start with default model loaded
+
+```sh
+docker run -it --rm -p 8888:8888 -p 5000:5000 -p 3000:8080 --gpus all \
+    -v /home/jdehart/working/gpud/models:/workspace/models \
+    llama-cpp-python:latest
+```
+
+### Start with sepcific model loaded
+
 ```sh
 docker run -it --rm -p 8888:8888 -p 5000:5000 --gpus all \
-    -v /host/path/to/models:/workspace/models \
+    -v /home/jdehart/working/gpud/models:/workspace/models \
+    -e MODEL_PATH="/workspace/models/Meta-Llama-3-70B-Instruct.Q5_K_M.gguf" \
     llama-cpp-python:latest
 ```
 
 ### Step 5: Access the Services
 
 - **JupyterLab**: Open your web browser and navigate to `http://localhost:8888` to access JupyterLab.
-- **LLaMA Model Server**: The model server will be accessible at `http://localhost:5000`.
+- **LLaMA Model Server**: The model server will be accessible at `http://localhost:5000/docs`.
 
 ## Project Structure
 
@@ -69,6 +80,6 @@ docker run -it --rm -p 8888:8888 -p 5000:5000 --gpus all \
 ## Notes
 
 - Ensure that your Docker configuration allows for sufficient memory and GPU access.
-- You can switch between different models by changing the `MODEL_PATH` environment variable when running the container when building with a predefined model loaded. (not the best way to do this since it becomes a problem when trying to load a second model.)
+- You can switch between different models by changing the `MODEL_PATH` environment variable when running the container.
 
 By following these instructions, you can easily set up and run a powerful environment for interactive data science and machine learning workflows using JupyterLab and LLaMA models.
