@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default model path
-MODEL_PATH=${MODEL_PATH:-"/workspace/models/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf"}
+MODEL_PATH=${MODEL_PATH:-"/workspace/models/Meta-Llama-3-70B-Instruct.Q5_K_M.gguf"}
 
 # Run the GPU test script
 echo "Running GPU test..."
