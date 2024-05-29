@@ -11,14 +11,20 @@ headers = {
 
 # Data payload for the API request
 data = {
-    "prompt": "List the planets in the solar system in order from closest to farthest from the Sun. Provide each planet's name and a brief fact about it.\n1.",
+    "prompt": "List the planets in the solar system in order from closest to farthest from the Sun. Provide each planet's name and a brief fact about it. Also include any fun facts about each planet. Also include a summary note about pluto.\n1.",
     "stop": ["###"],
-    "max_tokens": 512,
+    "max_tokens": 2048,
     "temperature": 0.5,
     "top_p": 0.9,
     "frequency_penalty": 0.5,
     "presence_penalty": 0.5,
-    "stream": "true"
+    "stream": "true",
+    "offload_kqv": "true",
+    "n_threads": -1,
+    "n_threads_batch:": -1,
+    "n_batch": 8096,
+    "n_ctx": 8096,
+    "echo": "false"
 }
 
 def stream_response_as_paragraph(url, headers, data):
