@@ -14,7 +14,7 @@ data = {
     "prompt": "List the planets in the solar system in order from closest to farthest from the Sun. Provide each planet's name and a brief fact about it. Also include any fun facts about each planet. Also include a summary note about pluto.\n1.",
     "stop": ["###"],
     "max_tokens": 2048,
-    "temperature": 0.5,
+    "temperature": 0.0,
     "top_p": 0.9,
     "frequency_penalty": 0.5,
     "presence_penalty": 0.5,
